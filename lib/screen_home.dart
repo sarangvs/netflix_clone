@@ -16,14 +16,39 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Container(
-          height: screenHeight/7,
-          width: screenWidth,
-          decoration: const BoxDecoration(
-            color: Colors.white
-          ),
-        ),
+      body:   SafeArea(
+        child: NestedScrollView(
+          floatHeaderSlivers: true,
+            headerSliverBuilder: (context,innerBoxIsScrolled)=>[
+               SliverAppBar(
+                 floating: true,
+                backgroundColor: Colors.transparent,
+                leading: const Image(
+                  image: AssetImage('assets/netflix_logo.png'),
+                ),
+                actions: [
+                  IconButton(
+                      onPressed: (){},
+                      icon: const Icon(Icons.cast,color: Colors.white)
+                  ),
+                  IconButton(
+                      onPressed: (){},
+                      icon: const Image(
+                        image: AssetImage('assets/profile.png'),
+                      )
+                  )
+                ],
+              )
+            ],
+            body:
+            ListView.separated(
+                itemBuilder: (context,index)=>const ListTile(
+                  leading: Icon(Icons.emoji_emotions_sharp,color: Colors.white,),
+                  title: Text('Name',style: TextStyle(color: Colors.white),),
+                ),
+                separatorBuilder: (context,index)=>const Divider(),
+                itemCount: 15)
+        )
       ),
       bottomNavigationBar: getBottomNavigationBar(),
     );
@@ -39,9 +64,10 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             IconButton(
-              icon: const Icon(Icons.home, color: Colors.white30),
+              icon: const Icon(Icons.home_outlined, color: Colors.white30),
               onPressed: () {},
             ),
+
             IconButton(
               icon: const Icon(Icons.video_collection_outlined,
                   color: Colors.white30),
