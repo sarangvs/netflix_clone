@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:netflix_clone/Widgets/horizontal_list.dart';
 import 'package:netflix_clone/screen_2.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -98,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         width: 60,
                         decoration:  BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(3)
+                          borderRadius: BorderRadius.circular(2)
                         ),
                        
                         child: Row(
@@ -136,7 +137,56 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold,fontSize: 20),
                   textAlign: TextAlign.left,
-                )
+                ),
+               const SizedBox(height: 10,),
+               SizedBox(
+                 height: 180,
+                 child: ListView(
+                   scrollDirection: Axis.horizontal,
+                   children: [
+                     buildCard(),
+                     const SizedBox(width: 12,),
+                     buildCard(),
+                     const SizedBox(width: 12,),
+                     buildCard(),
+                     const SizedBox(width: 12,),
+                     buildCard(),
+                     const SizedBox(width: 12,),
+                     buildCard(),
+                     const SizedBox(width: 12,),
+                     buildCard(),
+                     const SizedBox(width: 12,),
+                   ],
+                 ),
+               ),
+                const SizedBox(height: 10,),
+                const Text(
+                  'Trending Now',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold,fontSize: 20),
+                  textAlign: TextAlign.left,
+                ),
+                const SizedBox(height: 10,),
+                SizedBox(
+                  height: 180,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      buildCard(),
+                      const SizedBox(width: 12,),
+                      buildCard(),
+                      const SizedBox(width: 12,),
+                      buildCard(),
+                      const SizedBox(width: 12,),
+                      buildCard(),
+                      const SizedBox(width: 12,),
+                      buildCard(),
+                      const SizedBox(width: 12,),
+                      buildCard(),
+                      const SizedBox(width: 12,),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -197,5 +247,10 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+  Widget buildCard()=>SizedBox(
+    width: 130,
+    height: 140,
+    child: Image.asset('assets/cover.png',fit: BoxFit.fill,),
+  );
 }
 
