@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:netflix_clone/screen_home.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +18,13 @@ class MyApp extends StatelessWidget {
 
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(),
+      home: AnimatedSplashScreen(
+        nextScreen: const MyHomePage(),
+        splash: 'assets/netflixsplash.gif',splashIconSize: 1000,
+        animationDuration: const Duration(milliseconds: 5),
+        backgroundColor: Colors.black,
+
+      ),
     );
   }
 }
