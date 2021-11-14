@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:netflix_clone/screen_home.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';

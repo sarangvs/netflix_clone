@@ -30,6 +30,7 @@ dependencies:
   flutter:
     sdk: flutter
   animated_splash_screen: ^1.1.0
+  tmdb_api: ^2.0.0
 
 
   # The following adds the Cupertino Icons font to your application.

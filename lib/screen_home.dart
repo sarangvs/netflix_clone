@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:netflix_clone/Widgets/horizontal_list.dart';
-import 'package:netflix_clone/screen_2.dart';
+import 'package:netflix_clone/playscreen.dart';
+import 'package:tmdb_api/tmdb_api.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -13,6 +13,42 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  List trendingMovies = [];
+  List popularMovies = [];
+  List tvShows = [];
+  final String apiKey = 'd4bd1dbbe323b3aac1351d0528af85ea';
+  final readAccessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkNGJkMWRiYmUzMjNiM2FhYzEzNTFkMDUyOGFmODVlYSIsInN1YiI6IjYxOGZjYmJjY2NhN2RlMDA5MGVlNzkzYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.sGGtqoDC4h0lv55jMjZ9vzqfrABWQDiVGYI99V2t5B0';
+
+  @override
+  void initState() {
+    loadMovies();
+    super.initState();
+    setState(() {
+
+    });
+  }
+
+  ///Load Movies
+  void loadMovies() async {
+    TMDB tmdbWithCustomLogs = TMDB(ApiKeys(apiKey, readAccessToken),
+        logConfig: ConfigLogger(
+          showLogs: true,
+          showErrorLogs: true,
+        ));
+    Map trendingResult = await tmdbWithCustomLogs.v3.trending.getTrending();
+    Map popularMovieResult = await tmdbWithCustomLogs.v3.movies.getTopRated();
+    Map tvShowsResults = await tmdbWithCustomLogs.v3.tv.getPouplar();
+
+    setState(() {
+      trendingMovies = trendingResult['results'];
+      popularMovies = popularMovieResult['results'];
+      tvShows = tvShowsResults['results'];
+    });
+    print('trendingggggggggggggggggggggggggggggggggggggggggg$trendingMovies');
+    print('populaaaaaaaaaaaaaaaaaaaaaaaaaaaar$popularMovies');
+    print('tvvvvvvvvvvvvvvvvvvv$tvShows');
+  }
+
   late TabController tabController;
 
   @override
@@ -34,6 +70,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   systemNavigationBarColor: Colors.transparent),
               leading: const Image(
                 image: AssetImage('assets/netflix_logo.png'),
+                width: 5,
+                height: 5,
+                fit: BoxFit.none,
               ),
               actions: [
                 IconButton(
@@ -46,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ))
               ],
               bottom: PreferredSize(
-                preferredSize: Size(screenWidth, 12),
+                preferredSize: Size(screenWidth, 30),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: const [
@@ -61,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Text(
                       'Categories',
                       style: TextStyle(color: Colors.white),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -77,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 Container(
-                    color: Colors.transparent,
+                  color: Colors.transparent,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -97,11 +136,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       Container(
                         width: 60,
-                        decoration:  BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(2)
-                        ),
-                       
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(2)),
                         child: Row(
                           children: const [
                             Icon(
@@ -135,57 +172,131 @@ class _MyHomePageState extends State<MyHomePage> {
                 const Text(
                   'Popular on Netflix',
                   style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold,fontSize: 20),
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
                   textAlign: TextAlign.left,
                 ),
-               const SizedBox(height: 10,),
-               SizedBox(
-                 height: 180,
-                 child: ListView(
-                   scrollDirection: Axis.horizontal,
-                   children: [
-                     buildCard(),
-                     const SizedBox(width: 12,),
-                     buildCard(),
-                     const SizedBox(width: 12,),
-                     buildCard(),
-                     const SizedBox(width: 12,),
-                     buildCard(),
-                     const SizedBox(width: 12,),
-                     buildCard(),
-                     const SizedBox(width: 12,),
-                     buildCard(),
-                     const SizedBox(width: 12,),
-                   ],
-                 ),
-               ),
-                const SizedBox(height: 10,),
+                const SizedBox(
+                  height: 10,
+                ),
+                ///Popular Movies
+                SizedBox(
+                  height: 180,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: popularMovies.length,
+                      itemBuilder: (context, index){
+                        return GestureDetector(
+                          onTap: (){
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const PlayScreen(),
+                                ));
+                          },
+                          child: Container(
+                            width: 130,
+                            height: 140,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                      'https://image.tmdb.org/t/p/w500'+popularMovies[index]['poster_path']
+                                  ),
+                                )
+                            ),
+                          ),
+                        );
+                      }
+                  )
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                ///Trending Movies
                 const Text(
                   'Trending Now',
                   style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold,fontSize: 20),
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
                   textAlign: TextAlign.left,
                 ),
-                const SizedBox(height: 10,),
+                const SizedBox(
+                  height: 10,
+                ),
                 SizedBox(
                   height: 180,
-                  child: ListView(
+                  child:ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    children: [
-                      buildCard(),
-                      const SizedBox(width: 12,),
-                      buildCard(),
-                      const SizedBox(width: 12,),
-                      buildCard(),
-                      const SizedBox(width: 12,),
-                      buildCard(),
-                      const SizedBox(width: 12,),
-                      buildCard(),
-                      const SizedBox(width: 12,),
-                      buildCard(),
-                      const SizedBox(width: 12,),
-                    ],
-                  ),
+                    itemCount: trendingMovies.length,
+                      itemBuilder: (context, index){
+                      return GestureDetector(
+                        onTap: (){
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const PlayScreen(),
+                              ));
+                        },
+                        child: Container(
+                          width: 130,
+                          height: 140,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                'https://image.tmdb.org/t/p/w500'+trendingMovies[index]['poster_path']
+                              ),
+                            )
+                          ),
+                        ),
+                      );
+                      }
+                  )
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                ///TV SHOWS
+                const Text(
+                  'Tv Shows',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
+                  textAlign: TextAlign.left,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  height: 180,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: tvShows.length,
+                      itemBuilder: (context, index){
+                        return GestureDetector(
+                          onTap: (){
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const PlayScreen(),
+                                ));
+                          },
+                          child: Container(
+                            width: 130,
+                            height: 140,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                      'https://image.tmdb.org/t/p/w500'+tvShows[index]['poster_path']
+                                  ),
+                                )
+                            ),
+                          ),
+                        );
+                      }
+                  )
                 ),
               ],
             ),
@@ -198,11 +309,11 @@ class _MyHomePageState extends State<MyHomePage> {
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.home,
-                  color: Colors.white54,
+                  color: Colors.white,
                 ),
                 title: Text(
                   'Home',
-                  style: TextStyle(color: Colors.white54, fontSize: 10),
+                  style: TextStyle(color: Colors.white, fontSize: 10),
                 ),
                 backgroundColor: Colors.white),
             BottomNavigationBarItem(
@@ -247,10 +358,22 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-  Widget buildCard()=>SizedBox(
-    width: 130,
-    height: 140,
-    child: Image.asset('assets/cover.png',fit: BoxFit.fill,),
-  );
-}
 
+  Widget buildCard() => GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const PlayScreen(),
+              ));
+        },
+        child: SizedBox(
+          width: 130,
+          height: 140,
+          child: Image.asset(
+            'assets/cover.png',
+            fit: BoxFit.fill,
+          ),
+        ),
+      );
+}
